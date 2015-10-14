@@ -1,0 +1,43 @@
+#!/bin/bash -e
+
+APP_NAME=brief_url
+
+# Get repo root by sub-shelling and getting the parent directory of this script
+DIR=$( cd $(dirname $0)/.. && pwd )
+source $DIR/bin/include
+
+echo -n "Building with "
+go version
+
+BUILDDIR=$DIR/build
+
+echo $BUILDDIR
+
+rm -rfv $BUILDDIR
+mkdir -pv $BUILDDIR
+
+BIN=$BUILDDIR/$APP_NAME
+
+cd $DIR
+rm -rfv pkg
+
+# LDFLAGS is the go linker
+# -X is the option to set the value of a string variable in the application
+# So -X main.VARIABLE 123, gives the string VARIABLE the value 123 for the application
+# See http://stackoverflow.com/questions/11354518/golang-application-auto-build-versioning
+# In bash, -n checks if a variable is not blank
+LDFLAGS=""
+
+if [ -n "$VERSION" ]; then
+  LDFLAGS="$LDFLAGS -X github.com/sendgrid/$APP_NAME/app.VERSION $VERSION"
+fi
+
+if [ -n "$BUILD_NUMBER" ]; then
+  LDFLAGS="$LDFLAGS -X github.com/sendgrid/$APP_NAME/app.BUILD_NUMBER $BUILD_NUMBER"
+fi
+
+echo "=> go build -v -o $BIN ."
+go build -v \
+  -ldflags "$LDFLAGS" \
+  -o $BIN \
+  .

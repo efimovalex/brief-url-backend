@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+# Get repo root by sub-shelling and getting the parent directory of this script
+DIR=$( cd $(dirname $0)/.. && pwd )
+source $DIR/bin/include
+
+echo -n "Testing with "
+go version
+
+echo "Running go tests with -tags=acceptance in $PWD with GOPATH=$GOPATH"
+
+# Seeing unexpected errors? did you source your env file?
+go test ./acceptance -tags=acceptance -parallel=2 -race

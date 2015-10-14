@@ -1,0 +1,1 @@
+Adaptors represent any other service that you are going to contact. By masking all other services behind the adaptor and only exposing interfaces, you keep better separation of concerns and modularity in your code.

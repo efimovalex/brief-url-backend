@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# kill the required services for this service
+
+# kill apid
+sudo pkill mongod
+
+# kill MY_APP
+pkill brief_url
+

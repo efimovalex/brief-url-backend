@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# start all required services so acceptance tests can run against your binary
+
+# run mongoDB
+sudo mongod > dev/null &
+sleep 3
+
+# run brief_url
+cd $GOPATH/src/github.com/sendgrid/brief_url && ./bin/build && . example.conf && ./build/brief_url > /tmp/brief_url_acceptance.log 2>&1 &
+

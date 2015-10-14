@@ -1,0 +1,76 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+# CHAOS
+
+CRUD Service for user settings. See the [repository](https://github.com/sendgrid/chaos).
+
+## Signup a new user [/v1/signup]
+
+### Retrieve the Entry Point [POST]
+
++ Request (application/json)
+
+        {
+            "username":"example",
+            "password":"unsafePassword123",
+            "email":"example@sendgrid.com"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "result":
+            {
+                "username":"example",
+                "user_id":1483057,
+                "email":"example@sendgrid.com",
+                "signup_session_token":"1c674207-a4ba-4193-b7c0-285d9095b833",
+                "authorization_token":"78c0045c6489489f6cf6c4ae6d2e709a"
+            }
+        }
+
+
+## Username Resource [/v1/signup/username]
+
+    + Parameters
+ 
+        + username (string)
+        
+
+### Check if username exists [GET]
+
++ Response 204
+
++ Response 404
+
+## User Profile Information [/v1/users/{userID}]
+
+### Get user profile information [GET]
+
++ Response 200
+
+        {
+            "user_id":123,
+            "username":"example",
+            "account_id":"30201020-3040-5060-7080-900010203040",
+            "email":"example@sendgrid.com"
+        }
+
+## Billing Validation Resource [/v1/signup/payment_confirmation]
+
+### Validate a Billing Response [GET]
+
++ Response 200 (application/json)
+
+    + Header
+    
+            Authorization: token d6275629136b996bc6fe0214a12c43c8
+        
+    + Body
+
+            {
+                "sg_token":"00cbef03-1fb0-4a8b-b963-f99b306efb76",
+                "package_uuid":"df56ae96-2e3b-490f-a6a1-d1c9a55d4a6a",
+                "coupon_code": "FREEMAIL"
+            }

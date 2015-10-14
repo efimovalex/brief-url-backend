@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+# Get repo root by sub-shelling and getting the parent directory of this script
+DIR=$( cd $(dirname $0)/.. && pwd )
+
+PKG_NAME=github.com/sendgrid/brief_url
+
+# assume $GOPATH is set already
+sudo mkdir -p "$GOPATH/src/`dirname $PKG_NAME`"
+
+sudo rm -f $GOPATH/src/$PKG_NAME
+sudo ln -s $DIR $GOPATH/src/$PKG_NAME
+
+# in this GOPATH will be rewritten
+source $DIR/bin/include

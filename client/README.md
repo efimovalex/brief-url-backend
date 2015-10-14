@@ -1,0 +1,1 @@
+All public responses from your service should be available here, including handy client code. Errors and structs that marshal to your code's repsonses should be available. Handy client code could be bootstrap functions that will call your service.

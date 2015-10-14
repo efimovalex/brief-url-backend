@@ -1,0 +1,1 @@
+This is the central folder for your application's logic. All endpoints and tests will be in located in this directory.
