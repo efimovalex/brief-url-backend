@@ -7,11 +7,11 @@ import (
 )
 
 type Stat struct {
-	unique_ip_access int
-	ip_access        int
-	clicks           int
-	day              time.Time
-	URLID            mgo.ObjectId
+	ID           bson.ObjectId `bson:"_id"`
+	UniqueClicks int           `bson:"unique_clicks"`
+	IP           int           `bson:"ip"`
+	Clicks       int           `bson:"clicks"`
+	Day          time.Time     `bson:"day"`
 }
 
 func GetStatCollection(DB *mgo.Database) *mgo.Collection {

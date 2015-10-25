@@ -5,6 +5,6 @@ package app
 // these variables allowing the healthcheck endpoint
 // to show the compiled version and build number
 
-var VERSION string = "VERSION NOT DEFINED"
+var VERSION string = "VERSION_NOT_DEFINED"
 
-var BUILD_NUMBER string = "BUILD NUMBER NOT DEFINED"
+var BUILD_NUMBER string = "BUILD_NUMBER_NOT_DEFINED"

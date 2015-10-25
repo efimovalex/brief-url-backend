@@ -2,24 +2,24 @@ package main
 
 import (
 	"log"
+	"os"
 
-	"github.com/sendgrid/brief_url/app"
-	"github.com/sendgrid/go-envy"
-	"github.com/sendgrid/ln"
+	"github.com/efimovalex/brief_url/app"
 )
 
 func main() {
 	config := &app.Config{
 		Interface: "0.0.0.0",
-		Port:      "50111",
-		MongoURLs: "http://localhost:8082",
+		Port:      50000,
 	}
 
-	ln.Info("starting with config", ln.Map{"config": config})
+	log := *log.New(os.Stderr, "bried_url ", log.LstdFlags)
 
-	if err := app.Start(config); err != nil {
-		log.Fatal("Error occurred during startup:", err)
+	log.Printf("starting with config: %v", map[string]app.Config{"config": *config})
+
+	if err := app.Start(config, &log); err != nil {
+		log.Fatal("Error occurred during startup: ", err)
 	}
 
-	ln.Info("exiting.", nil)
+	log.Println("exiting.", nil)
 }

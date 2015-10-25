@@ -19,7 +19,7 @@ func (a *REST) StartHTTP() error {
 		return errors.New("listener is required")
 	}
 
-	ln.Info("started http server", ln.Map{"addr": a.Listener.Addr()})
+	log.Printf("started http server: %s", a.Listener.Addr().String())
 
 	return http.Serve(a.Listener, a.Router)
 }

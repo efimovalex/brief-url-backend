@@ -7,10 +7,12 @@ import (
 )
 
 type URL struct {
+	ID         bson.ObjectId
 	Route      string
 	Redirect   string
-	userID     mgo.ObjectId
-	domainID   mgo.ObjectId
+	userID     bson.ObjectId
+	domainID   bson.ObjectId
+	Stats      []Stat.URLID
 	created_at time.Time
 	updated_at time.Time
 	expires_At time.Time

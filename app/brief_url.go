@@ -4,13 +4,10 @@
 package app
 
 import (
-	"errors"
-	"fmt"
 	"log"
 	"net"
 	"strconv"
 	"sync"
-	"time"
 
 	"github.com/efimovalex/brief_url/adaptor/db"
 )
@@ -19,9 +16,7 @@ import (
 // These are environment variables that will be modified by Chef.
 type Config struct {
 	Interface string `name:"INTERFACE" example:"0.0.0.0"`
-	Port      int    `name:"PORT" example:"50110"`
-
-	MongoURLs string `name:"MONGO_URLS" example:"http://localhost:8082"`
+	Port      int    `name:"PORT" example:"50000"`
 }
 
 // Service contains private members to prepare this application/service.
@@ -30,7 +25,7 @@ type Service struct {
 }
 
 // Start loads configs and starts listeners
-func Start(config *Config) error {
+func Start(config *Config, logger *log.Logger) error {
 	// this service
 	httpAddr := net.JoinHostPort(config.Interface, strconv.Itoa(config.Port))
 	httpListener, err := net.Listen("tcp", httpAddr)
@@ -38,7 +33,10 @@ func Start(config *Config) error {
 		return err
 	}
 
-	dbAdaptor := db.New(config.MongoURLs)
+	dbAdaptor, err := db.New()
+	if err != nil {
+		return err
+	}
 
 	MyApp := &Service{
 		REST: &REST{
@@ -46,7 +44,7 @@ func Start(config *Config) error {
 			Router: Routes(
 				// add each dependent service as a dependency to the router
 				dependencies{
-					logger:    *log.New(os.Stderr, "bried_url ", log.LstdFlags),
+					logger:    logger,
 					dbAdaptor: dbAdaptor,
 				}),
 		},

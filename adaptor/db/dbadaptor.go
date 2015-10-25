@@ -1,26 +1,36 @@
 package db
 
 import (
+	"errors"
+	"time"
+
 	"gopkg.in/mgo.v2"
 )
 
 type Adaptor struct {
-	user       *mgo.Collection
-	url        *mgo.Collection
-	domains    *mgo.Collection
-	api_tokens *mgo.Collection
-	stats      *mgo.Collection
+	DB        *mgo.Database
+	user      *mgo.Collection
+	url       *mgo.Collection
+	domain    *mgo.Collection
+	api_token *mgo.Collection
+	stat      *mgo.Collection
 }
 
-func New(hosts string) (*Adaptor, *mgo.Session) {
-	session := mgo.Dial(hosts)
+func New() (*Adaptor, error) {
+	maxWait := time.Duration(5 * time.Second)
+	session, err := mgo.DialWithTimeout("localhost:27017", maxWait)
+	if err != nil {
+		err = errors.New("MongoDB Error - " + err.Error())
+		return &Adaptor{}, err
+	}
 	DB := session.DB("brief_url_db")
 
 	return &Adaptor{
-		user:      getUserCollection(DB),
-		url:       getURLCollection(DB),
-		domain:    getDomainCollection(DB),
-		api_token: getAPITokenCollection(DB),
-		stat:      getStatCollection(DB),
-	}
+		DB:       DB,
+		User:     GetUserCollection(DB),
+		Url:      GetURLCollection(DB),
+		Domain:   GetDomainCollection(DB),
+		ApiToken: GetAPITokenCollection(DB),
+		Stat:     GetStatCollection(DB),
+	}, nil
 }
