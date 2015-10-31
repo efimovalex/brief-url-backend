@@ -17,26 +17,25 @@ type dependencies struct {
 // Routes returns an http.Handler with the available RESTful routes for the service
 func Routes(deps dependencies) *mux.Router {
 	router := mux.NewRouter()
-	var resource string
 
 	// place all routes here to make it easier to find
 	resources := map[string]string{
-		"domainsEndpoint": "/domains/user/{user_id}",
-		"domainEndpoint":  "/domains/user/{user_id}/domain/{domain_id}",
+		"urlsEndpoint": "/v1/url",
+		"urlEndpoint":  "/v1/url/{url_id}",
 	}
 
-	domainEndpoint := &DomainEndpoint{}
-	domainsResource = resources["domainsEndpoint"]
-	domainResource = resources["domainsEndpoint"]
-	router.HandleFunc(resource, domainEndpoint.Get).Name(resource).Methods("GET")
-	router.HandleFunc(resource, domainsEndpoint.Get).Name(resource).Methods("GET")
+	urlEndpoint := &URLEndpoint{DB: deps.dbAdaptor, Logger: deps.logger}
+	URLsResource := resources["urlsEndpoint"]
+	URLResource := resources["urlEndpoint"]
 
-	router.HandleFunc(resource, domainEndpoint.Post).Name(resource).Methods("POST")
+	router.HandleFunc(URLsResource, urlEndpoint.Get).Name(URLsResource).Methods("GET")
+	router.HandleFunc(URLResource, urlEndpoint.Get).Name(URLResource).Methods("GET")
 
-	router.HandleFunc(resource, domainEndpoint.Delete).Name(resource).Methods("DELETE")
-	router.HandleFunc(resource, domainsEndpoint.Get).Name(resource).Methods("DELETE")
+	router.HandleFunc(URLsResource, urlEndpoint.Post).Name(URLsResource).Methods("POST")
 
-	router.HandleFunc(resource, domainEndpoint.Patch).Name(resource).Methods("PATCH")
+	router.HandleFunc(URLResource, urlEndpoint.Delete).Name(URLResource).Methods("DELETE")
+
+	router.HandleFunc(URLResource, urlEndpoint.Patch).Name(URLResource).Methods("PATCH")
 
 	router.NotFoundHandler = http.HandlerFunc(NotFound)
 

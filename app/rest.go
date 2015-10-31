@@ -3,23 +3,31 @@ package app
 import (
 	"errors"
 	"log"
-	"net"
-	"net/http"
+
+	"github.com/codegangsta/negroni"
+	"github.com/efimovalex/brief_url/middlewares"
+	"github.com/gorilla/mux"
 )
 
 // REST contains the rest based router and allows a listener to be set for easier, race-free testing
 type REST struct {
-	Router   http.Handler
-	Listener net.Listener
+	Addr   string
+	Router *mux.Router
 }
 
 // StartHTTP listens on the configured ports for the REST application
-func (a *REST) StartHTTP() error {
-	if a.Listener == nil {
-		return errors.New("listener is required")
+func (r *REST) StartHTTP() error {
+	if r.Addr == "" {
+		return errors.New("address is required")
 	}
 
-	log.Printf("started http server: %s", a.Listener.Addr().String())
+	log.Printf("started http server: %s", r.Addr)
 
-	return http.Serve(a.Listener, a.Router)
+	n := negroni.New()
+	n.Use(middlewares.NewCORS(r.Router))
+	n.UseHandler(r.Router)
+
+	n.Run(r.Addr)
+
+	return nil
 }

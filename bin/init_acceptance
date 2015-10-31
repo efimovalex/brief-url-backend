@@ -7,5 +7,5 @@ sudo mongod > dev/null &
 sleep 3
 
 # run brief_url
-cd $GOPATH/src/github.com/sendgrid/brief_url && ./bin/build && . example.conf && ./build/brief_url > /tmp/brief_url_acceptance.log 2>&1 &
+cd $GOPATH/src/github.com/efimovalex/brief_url && ./bin/build && . example.conf && ./build/brief_url > /tmp/brief_url_acceptance.log 2>&1 &
 

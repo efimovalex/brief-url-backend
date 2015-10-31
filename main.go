@@ -13,9 +13,7 @@ func main() {
 		Port:      50000,
 	}
 
-	log := *log.New(os.Stderr, "bried_url ", log.LstdFlags)
-
-	log.Printf("starting with config: %v", map[string]app.Config{"config": *config})
+	log := *log.New(os.Stderr, "brief_url ", log.LstdFlags)
 
 	if err := app.Start(config, &log); err != nil {
 		log.Fatal("Error occurred during startup: ", err)

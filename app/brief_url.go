@@ -1,6 +1,3 @@
-// Copyright 2014. SendGrid.
-// Package MY_APP does blah blah blah.
-
 package app
 
 import (
@@ -28,10 +25,6 @@ type Service struct {
 func Start(config *Config, logger *log.Logger) error {
 	// this service
 	httpAddr := net.JoinHostPort(config.Interface, strconv.Itoa(config.Port))
-	httpListener, err := net.Listen("tcp", httpAddr)
-	if err != nil {
-		return err
-	}
 
 	dbAdaptor, err := db.New()
 	if err != nil {
@@ -40,7 +33,7 @@ func Start(config *Config, logger *log.Logger) error {
 
 	MyApp := &Service{
 		REST: &REST{
-			Listener: httpListener,
+			Addr: httpAddr,
 			Router: Routes(
 				// add each dependent service as a dependency to the router
 				dependencies{

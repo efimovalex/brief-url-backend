@@ -8,12 +8,12 @@ import (
 )
 
 type Adaptor struct {
-	DB        *mgo.Database
-	user      *mgo.Collection
-	url       *mgo.Collection
-	domain    *mgo.Collection
-	api_token *mgo.Collection
-	stat      *mgo.Collection
+	DB       *mgo.Database
+	User     *mgo.Collection
+	Url      *URLCollection
+	Domain   *DomainCollection
+	ApiToken *mgo.Collection
+	Stat     *mgo.Collection
 }
 
 func New() (*Adaptor, error) {
