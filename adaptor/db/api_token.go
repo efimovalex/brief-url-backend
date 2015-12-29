@@ -8,16 +8,34 @@ import (
 )
 
 type APIKey struct {
-	ID         bson.ObjectId `bson:"_id"`
-	userID     bson.ObjectId `bson:"user_id"`
-	scopes     string        `bson:"scopes"`
-	token      string        `bson:"token"`
-	name       string        `bson:"name"`
-	created_at time.Time     `bson:"created_at"`
-	revoked_at time.Time     `bson:"revoked_at"`
-	expires_in time.Duration `bson:"expires_in"`
+	ID        bson.ObjectId `bson:"_id"`
+	UserID    bson.ObjectId `bson:"user_id"`
+	Scopes    string        `bson:"scopes"`
+	Token     string        `bson:"token"`
+	Name      string        `bson:"name"`
+	Hidden    bool          `bson:"hidden"`
+	CreatedAt time.Time     `bson:"created_at"`
+	updatedAt time.Time     `bson:"updated_at"`
+	RevokedAt time.Time     `bson:"revoked_at"`
+	ExpiresAt time.Time     `bson:"expires_in"`
 }
 
-func GetAPITokenCollection(DB *mgo.Database) *mgo.Collection {
-	return DB.C("api_token")
+type APIKeyCollection struct {
+	DB *mgo.Collection
+}
+
+func GetAPITokenCollection(DB *mgo.Database) *APIKeyCollection {
+	return &APIKeyCollection{DB: DB.C("api_token")}
+}
+
+func (ac *APIKeyCollection) Add(apiKey *APIKey) error {
+	if !apiKey.ID.Valid() {
+		apiKey.ID = bson.NewObjectId()
+	}
+
+	apiKey.updatedAt = apiKey.CreatedAt
+
+	err := ac.DB.Insert(apiKey)
+
+	return err
 }

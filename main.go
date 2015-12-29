@@ -9,8 +9,9 @@ import (
 
 func main() {
 	config := &app.Config{
-		Interface: "0.0.0.0",
-		Port:      50000,
+		Interface:     "0.0.0.0",
+		Port:          50000,
+		JWTSigningKey: "0DfQKwSC71USMyXE2MwL",
 	}
 
 	log := *log.New(os.Stderr, "brief_url ", log.LstdFlags)

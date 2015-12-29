@@ -12,13 +12,13 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// URLEndpoint exists as an example
-type URLEndpoint struct {
+// URLEndpoints exists as an example
+type URLEndpoints struct {
 	DB     *db.Adaptor
 	Logger *log.Logger
 }
 
-func (ue *URLEndpoint) Get(w http.ResponseWriter, r *http.Request) {
+func (ue *URLEndpoints) Get(w http.ResponseWriter, r *http.Request) {
 	URLID := mux.Vars(r)["url_id"]
 	if URLID == "" {
 		URLs, err := ue.DB.Url.GetAll()
@@ -61,7 +61,7 @@ func (ue *URLEndpoint) Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (ue *URLEndpoint) Post(w http.ResponseWriter, r *http.Request) {
+func (ue *URLEndpoints) Post(w http.ResponseWriter, r *http.Request) {
 	body, ioErr := ioutil.ReadAll(r.Body)
 	if ioErr != nil {
 		// attempt to read the body passed in
@@ -96,7 +96,7 @@ func (ue *URLEndpoint) Post(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (ue *URLEndpoint) Delete(w http.ResponseWriter, r *http.Request) {
+func (ue *URLEndpoints) Delete(w http.ResponseWriter, r *http.Request) {
 	URLID := mux.Vars(r)["url_id"]
 	if URLID == "" {
 		errs := []client.Error{{Message: "missing url_id", Field: ":url_id"}}
@@ -118,7 +118,7 @@ func (ue *URLEndpoint) Delete(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (ue *URLEndpoint) Patch(w http.ResponseWriter, r *http.Request) {
+func (ue *URLEndpoints) Patch(w http.ResponseWriter, r *http.Request) {
 	userID := mux.Vars(r)["user_id"]
 	if userID == "" {
 		errs := []client.Error{{Message: "missing user_id", Field: ":user_id"}}

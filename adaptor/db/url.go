@@ -1,13 +1,12 @@
 package db
 
 import (
-	"encoding/base64"
 	"errors"
+	"math/rand"
 	"net/url"
-	"strings"
 	"time"
 
-	"github.com/pborman/uuid"
+	"github.com/speps/go-hashids"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -19,13 +18,13 @@ type URLCollection struct {
 var DefaultTTL = 2 * 7 * 24 * time.Hour
 
 type URL struct {
-	ID        bson.ObjectId `bson:"_id"`
-	Route     string        `bson:"route"`
-	Redirect  string        `bson:"redirect"`
-	createdAt time.Time     `bson:"created_at"`
-	updatedAt time.Time     `bson:"updated_at"`
-	ExpiresAt time.Time     `bson:"expires_at"`
-	Active    bool          `bson:"active"`
+	ID        bson.ObjectId `bson:"_id" json:"id"`
+	Route     string        `bson:"route" json:"route"`
+	Redirect  string        `bson:"redirect" json:"redirect"`
+	createdAt time.Time     `bson:"created_at" json:"created_at,omitempty"`
+	updatedAt time.Time     `bson:"updated_at" json:"updated_at,omitempty"`
+	ExpiresAt time.Time     `bson:"expires_at" json:"expires_at,omitempty"`
+	Active    bool          `bson:"active" json:"active"`
 }
 
 func GetURLCollection(DB *mgo.Database) *URLCollection {
@@ -53,9 +52,17 @@ func (uc *URLCollection) Add(url *URL) error {
 		url.ID = bson.NewObjectId()
 	}
 
-	byteData := []byte(strings.Replace(uuid.New(), "-", "", -1))
+	timestamp := int(time.Now().UTC().Unix())
+	rand.Seed(time.Now().UTC().UnixNano())
+	hd := hashids.NewData()
+	hd.Salt = url.Redirect
+	hd.MinLength = 5
 
-	url.Route = base64.StdEncoding.EncodeToString(byteData)
+	h := hashids.NewWithData(hd)
+
+	e, _ := h.Encode([]int{timestamp, rand.Intn(9999) + 1, rand.Intn(9999) + 1, rand.Intn(9999) + 1})
+
+	url.Route = e
 	url.Active = true
 	url.createdAt = time.Now()
 	url.updatedAt = time.Now()

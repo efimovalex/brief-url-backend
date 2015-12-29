@@ -12,8 +12,9 @@ import (
 // Config holds config values that will be read in via the Envy package.
 // These are environment variables that will be modified by Chef.
 type Config struct {
-	Interface string `name:"INTERFACE" example:"0.0.0.0"`
-	Port      int    `name:"PORT" example:"50000"`
+	Interface     string `name:"INTERFACE" example:"0.0.0.0"`
+	Port          int    `name:"PORT" example:"50000"`
+	JWTSigningKey string `name:"JWT_SIGNING_KEY" example:"23ASDcsSAFaFGjiGjAF2io3j"`
 }
 
 // Service contains private members to prepare this application/service.
@@ -38,6 +39,7 @@ func Start(config *Config, logger *log.Logger) error {
 				// add each dependent service as a dependency to the router
 				dependencies{
 					logger:    logger,
+					config:    config,
 					dbAdaptor: dbAdaptor,
 				}),
 		},

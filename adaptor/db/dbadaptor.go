@@ -9,10 +9,10 @@ import (
 
 type Adaptor struct {
 	DB       *mgo.Database
-	User     *mgo.Collection
+	User     *UserCollection
 	Url      *URLCollection
 	Domain   *DomainCollection
-	ApiToken *mgo.Collection
+	ApiToken *APIKeyCollection
 	Stat     *mgo.Collection
 }
 
